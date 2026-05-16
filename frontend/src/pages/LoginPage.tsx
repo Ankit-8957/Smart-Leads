@@ -43,8 +43,9 @@ const LoginPage: React.FC = () => {
       await login(form.email, form.password);
       toast.success('Welcome back!');
       navigate('/dashboard');
-    } catch {
-      toast.error('Invalid email or password');
+    } catch (err: any) {
+      const message = err.response?.data?.message || 'Invalid email or password';
+      toast.error(message);
     } finally {
       setIsLoading(false);
     }
