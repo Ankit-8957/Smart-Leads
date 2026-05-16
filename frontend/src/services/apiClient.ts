@@ -1,10 +1,22 @@
 import axios from 'axios';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
+// Ensure the URL always has the /api prefix even if forgotten in environment variables
+let baseURL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+
+// Remove trailing slash if present
+if (baseURL.endsWith('/')) {
+  baseURL = baseURL.slice(0, -1);
+}
+
+// Append /api if missing
+if (!baseURL.endsWith('/api')) {
+  baseURL += '/api';
+}
 
 const apiClient = axios.create({
-  baseURL: API_BASE_URL,
+  baseURL,
   headers: { 'Content-Type': 'application/json' },
+  withCredentials: true,
   timeout: 10000,
 });
 

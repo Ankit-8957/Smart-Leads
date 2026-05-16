@@ -11,6 +11,7 @@ export const authenticate = (
   const authHeader = req.headers.authorization;
 
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    console.warn(`[Auth] Unauthorized access attempt: ${!authHeader ? 'Missing' : 'Malformed'} header`);
     sendError(res, 'Access denied. No token provided.', 401);
     return;
   }
@@ -19,6 +20,7 @@ export const authenticate = (
   const jwtSecret = process.env.JWT_SECRET;
 
   if (!jwtSecret) {
+    console.error('[Auth] CRITICAL: JWT_SECRET is not defined in environment');
     sendError(res, 'Internal server error', 500);
     return;
   }
@@ -32,6 +34,7 @@ export const authenticate = (
     };
     next();
   } catch (error) {
+    console.error('[Auth] Token verification failed:', error instanceof Error ? error.message : 'Unknown error');
     if (error instanceof jwt.TokenExpiredError) {
       sendError(res, 'Token has expired. Please login again.', 401);
     } else if (error instanceof jwt.JsonWebTokenError) {

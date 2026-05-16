@@ -60,9 +60,8 @@ const RegisterPage: React.FC = () => {
       await register(form.name, form.email, form.password, form.role);
       toast.success('Account created! Welcome.');
       navigate('/dashboard');
-    } catch (err: any) {
-      const message = err.response?.data?.message || 'Registration failed. Please try again.';
-      toast.error(message);
+    } catch {
+      toast.error('Registration failed. Email may already be in use.');
     } finally {
       setIsLoading(false);
     }
